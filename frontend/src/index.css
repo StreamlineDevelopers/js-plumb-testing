@@ -16,11 +16,11 @@
 }
 
 .app__header-buttons {
-	margin-bottom: 1rem;
+	margin: 1rem 0;
 }
 
 .app__header-buttons button:not(:last-of-type) {
-	margin-right: 1rem;
+	margin-right: 1rem !important;
 }
 
 .app__body {

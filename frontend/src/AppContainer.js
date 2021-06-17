@@ -7,13 +7,17 @@ import App from './App.js';
 // sample data
 import SampleData from './sampleData.json';
 
+// notification
+import notification from './components/notification/notification';
+
 const AppContainer = () => {
-	const [jsPlumbInst, setjsPlumbInst] = useState(null);
+	const [jsPlumbState, setjsPlumbState] = useState(null);
+	const [connectionInput, setConnectionInput] = useState('');
 
 	//#region //* JS PLUMB FUNCTIONS
 	const initializeJsPlumb = useCallback(() => {
 		const jsPlumbDefaultOptions = {
-			Endpoints: [['Dot', { radius: 13 }]],
+			Endpoints: [['Dot', { radius: 13 }, 'Blank']],
 			EndpointStyle: { width: 25, height: 21, fill: '#666', strokeWidth: 10 },
 			EndpointHoverStyle: { fill: '#FF6600' },
 			ConnectionOverlays: [
@@ -34,7 +38,7 @@ const AppContainer = () => {
 
 		setDraggables(jsPlumbInstance, 'section');
 
-		setjsPlumbInst(jsPlumbInstance);
+		setjsPlumbState(jsPlumbInstance);
 
 		return jsPlumbInstance;
 	}, []);
@@ -65,10 +69,13 @@ const AppContainer = () => {
 		const endPointOptions = {
 			connector: ['Flowchart', { stub: [10, 0], gap: 5, cornerRadius: 10, alwaysRespectStubs: true }],
 			connectionType: 'gray-connection',
-			onMaxConnections: (params, originalEvent) => {
-				console.log('element is ', params.endpoint.start(), 'maxConnections is', params.maxConnections);
-				console.log('params', params);
-				console.log('event', originalEvent);
+			onMaxConnections: (data, e) => {
+				notification(
+					'error',
+					'topLeft',
+					'Connection Error:',
+					`Max connection allowed limit exceeded. (${data.maxConnections})`
+				);
 			},
 		};
 
@@ -100,8 +107,12 @@ const AppContainer = () => {
 	const jsPlumbActions = (jsPlumbInstance) => {
 		jsPlumbInstance.bind('connection', (data, e) => {
 			const { connection, sourceId } = data;
+			const parameters = connection.getParameters();
 
 			connection.getOverlay('label').setLabel(sourceId);
+
+			eval(parameters.run);
+			// console.log(parameters);
 		});
 
 		jsPlumbInstance.bind('dblclick', (data, e) => {
@@ -114,14 +125,41 @@ const AppContainer = () => {
 		});
 	};
 
+	//#endregion
+
+	//#region //* BUTTONS
+	const onConnectionInputChange = (e) => {
+		setConnectionInput(e.target.value);
+	};
+
+	const onAddConnectionClick = () => {
+		const data = connectionInput.split(',');
+		const option = {
+			anchors: ['RightMiddle', 'LeftMiddle'],
+			endpoints: ['Dot', 'Blank'],
+		};
+
+		if (data.length !== 2)
+			return notification('error', 'topLeft', 'Input Error:', 'Separate srcid and targetid with a comma');
+
+		jsPlumbState.connect({ source: data[0], target: [data[1]] }, option);
+	};
+
+	const onDeleteConnectionClick = () => {
+		jsPlumbState.deleteConnectionsForElement(connectionInput);
+	};
+
+	const onDeleteElementClick = (e) => {
+		jsPlumbState.remove(connectionInput);
+	};
+
 	const onResetConnectionClick = () => {
-		jsPlumbInst.deleteEveryConnection();
+		jsPlumbState.deleteEveryConnection();
 	};
 
 	//#endregion
 
 	//#region //* JS PLUMB USE EFFECT
-
 	useEffect(() => {
 		const jsPlumbInstance = initializeJsPlumb();
 
@@ -139,7 +177,16 @@ const AppContainer = () => {
 
 	//#endregion
 
-	return <App onResetConnectionClick={onResetConnectionClick} />;
+	return (
+		<App
+			onResetConnectionClick={onResetConnectionClick}
+			connectionInput={connectionInput}
+			onConnectionInputChange={onConnectionInputChange}
+			onAddConnectionClick={onAddConnectionClick}
+			onDeleteConnectionClick={onDeleteConnectionClick}
+			onDeleteElementClick={onDeleteElementClick}
+		/>
+	);
 };
 
 export default AppContainer;

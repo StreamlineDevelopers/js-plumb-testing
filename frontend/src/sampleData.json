@@ -4,17 +4,38 @@
 			{
 				"identifier": "left",
 				"element": "app__left-one",
-				"option": { "anchor": "RightMiddle" }
+				"option": {
+					"anchor": "RightMiddle",
+					"parameters": {
+						"id": "app__left-one",
+						"message": "hello from app__left-one",
+						"run": "(function() { alert('I AM FROM app__left-one');})()"
+					}
+				}
 			},
 			{
 				"identifier": "left",
 				"element": "app__left-two",
-				"option": { "anchor": "RightMiddle" }
+				"option": {
+					"anchor": "RightMiddle",
+					"parameters": {
+						"id": "app__left-two",
+						"message": "hello from app__left-two",
+						"run": "(function() { alert('I AM FROM app__left-two');})()"
+					}
+				}
 			},
 			{
 				"identifier": "left",
 				"element": "app__left-three",
-				"option": { "anchor": "RightMiddle" }
+				"option": {
+					"anchor": "RightMiddle",
+					"parameters": {
+						"id": "app__left-three",
+						"message": "hello from app__left-three",
+						"run": "(function() { alert('I AM FROM app__left-three');})()"
+					}
+				}
 			}
 		]
 	},

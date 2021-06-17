@@ -1,9 +1,20 @@
 import React from 'react';
 
 // antd
-import { Button } from 'antd';
+import { Button, Input } from 'antd';
 
-const App = ({ onResetConnectionClick }) => {
+const { Group } = Input;
+
+const App = (props) => {
+	const {
+		connectionInput,
+		onConnectionInputChange,
+		onAddConnectionClick,
+		onDeleteConnectionClick,
+		onDeleteElementClick,
+		onResetConnectionClick,
+	} = props;
+
 	return (
 		<div className='app'>
 			<div className='app__body'>
@@ -11,10 +22,28 @@ const App = ({ onResetConnectionClick }) => {
 					<h1>JSPlumb Testing</h1>
 
 					<div className='app__header-buttons'>
-						<Button type='primary'>Add Connections</Button>
-						<Button type='default' onClick={onResetConnectionClick}>
-							Reset Connections
-						</Button>
+						<Group compact='true' style={{ display: 'flex' }}>
+							<Input
+								type='text'
+								style={{ width: '20rem' }}
+								value={connectionInput}
+								onChange={onConnectionInputChange}
+								size='small'
+								placeholder='Input element id ...'
+							/>
+							<Button type='primary' onClick={onAddConnectionClick}>
+								Add Connection
+							</Button>
+							<Button type='default' onClick={onDeleteConnectionClick}>
+								Delete Connection
+							</Button>
+							<Button type='default' onClick={onDeleteElementClick}>
+								Delete Element
+							</Button>
+							<Button type='default' onClick={onResetConnectionClick}>
+								Reset Connections
+							</Button>
+						</Group>
 					</div>
 				</header>
 
