@@ -1,0 +1,40 @@
+[
+	{
+		"left": [
+			{
+				"identifier": "left",
+				"element": "app__left-one",
+				"option": { "anchor": "RightMiddle" }
+			},
+			{
+				"identifier": "left",
+				"element": "app__left-two",
+				"option": { "anchor": "RightMiddle" }
+			},
+			{
+				"identifier": "left",
+				"element": "app__left-three",
+				"option": { "anchor": "RightMiddle" }
+			}
+		]
+	},
+	{
+		"right": [
+			{
+				"identifier": "right",
+				"element": "app__right-one",
+				"option": { "anchor": "LeftMiddle" }
+			},
+			{
+				"identifier": "right",
+				"element": "app__right-two",
+				"option": { "anchor": "LeftMiddle" }
+			},
+			{
+				"identifier": "right",
+				"element": "app__right-three",
+				"option": { "anchor": "LeftMiddle" }
+			}
+		]
+	}
+]
