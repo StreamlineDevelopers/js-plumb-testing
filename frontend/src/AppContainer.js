@@ -10,11 +10,25 @@ import SampleData from './sampleData.json';
 // notification
 import notification from './components/notification/notification';
 
+// components
+import AnotherContainer from './components/another/AnotherContainer.js';
+
 const AppContainer = () => {
 	const [jsPlumbState, setjsPlumbState] = useState(null);
 	const [connectionInput, setConnectionInput] = useState('');
 
-	//#region //* JS PLUMB FUNCTIONS
+	const uuidv4 = () => {
+		return (
+			'xxxxxxxx-xxxx-4xxx-xxxxxxxxxxxx'.replace(/[xy]/g),
+			(c) => {
+				const r = (Math.random() * 16) | 0,
+					v = c == 'x' ? r : (r & 0x3) | 0x8;
+				return v.toString(16);
+			}
+		);
+	};
+
+	//#region //* JS PLUMB LOGIC
 	const initializeJsPlumb = useCallback(() => {
 		const jsPlumbDefaultOptions = {
 			Endpoints: [['Dot', { radius: 13 }, 'Blank']],
@@ -36,7 +50,7 @@ const AppContainer = () => {
 
 		jsPlumbInstance.setContainer('app-container');
 
-		setDraggables(jsPlumbInstance, 'section');
+		setDraggables(jsPlumbInstance, '.app__contents--section');
 
 		setjsPlumbState(jsPlumbInstance);
 
@@ -48,10 +62,17 @@ const AppContainer = () => {
 	 * @param {String} selector
 	 */
 	const setDraggables = (jsPlumbInstance, selector) => {
-		const sectionIds = [];
 		const querySections = document.querySelectorAll(selector);
-		querySections.forEach((section) => sectionIds.push(section.id));
-		sectionIds.forEach((id) => jsPlumbInstance.draggable(id, { containment: true }));
+
+		jsPlumbInstance.draggable(querySections, {
+			containment: true,
+			// helper: 'clone',
+			// appendTo: '#app__contents2-inputs',
+			// getConstrainingRectangle: () => [99999, 99999],
+			drag: function () {
+				jsPlumbInstance.repaintEverything();
+			},
+		});
 	};
 
 	/**
@@ -111,23 +132,23 @@ const AppContainer = () => {
 
 			connection.getOverlay('label').setLabel(sourceId);
 
-			eval(parameters.run);
-			// console.log(parameters);
+			doAlert(parameters.id);
 		});
 
 		jsPlumbInstance.bind('dblclick', (data, e) => {
 			const { sourceId } = data;
+
 			jsPlumbInstance.deleteConnectionsForElement(sourceId);
 		});
+	};
 
-		jsPlumbInstance.bind('contextmenu', function (data, e) {
-			//Connect the mouse to the right click event
-		});
+	const doAlert = (id) => {
+		return alert(`I am from ${id}`);
 	};
 
 	//#endregion
 
-	//#region //* BUTTONS
+	//#region //* BUTTONS LOGIC
 	const onConnectionInputChange = (e) => {
 		setConnectionInput(e.target.value);
 	};
@@ -142,7 +163,7 @@ const AppContainer = () => {
 		if (data.length !== 2)
 			return notification('error', 'topLeft', 'Input Error:', 'Separate srcid and targetid with a comma');
 
-		jsPlumbState.connect({ source: data[0], target: [data[1]] }, option);
+		jsPlumbState.connect({ source: data[0], target: data[1] }, option);
 	};
 
 	const onDeleteConnectionClick = () => {
@@ -177,15 +198,19 @@ const AppContainer = () => {
 
 	//#endregion
 
+	//#endregion
 	return (
-		<App
-			onResetConnectionClick={onResetConnectionClick}
-			connectionInput={connectionInput}
-			onConnectionInputChange={onConnectionInputChange}
-			onAddConnectionClick={onAddConnectionClick}
-			onDeleteConnectionClick={onDeleteConnectionClick}
-			onDeleteElementClick={onDeleteElementClick}
-		/>
+		<>
+			<App
+				onResetConnectionClick={onResetConnectionClick}
+				connectionInput={connectionInput}
+				onConnectionInputChange={onConnectionInputChange}
+				onAddConnectionClick={onAddConnectionClick}
+				onDeleteConnectionClick={onDeleteConnectionClick}
+				onDeleteElementClick={onDeleteElementClick}
+			/>
+			<AnotherContainer />
+		</>
 	);
 };
 

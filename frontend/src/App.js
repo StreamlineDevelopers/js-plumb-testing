@@ -1,5 +1,8 @@
 import React from 'react';
 
+// components
+import AnotherContainer from './components/another/AnotherContainer.js';
+
 // antd
 import { Button, Input } from 'antd';
 
@@ -49,25 +52,25 @@ const App = (props) => {
 
 				<div className='app__contents' id='app-container'>
 					<div className='app__left' id='app__left-container'>
-						<section id='app__left-one'>
+						<section className='app__contents--section' id='app__left-one'>
 							<h1 className='app__left-one__label'>left one</h1>
 						</section>
-						<section id='app__left-two'>
+						<section className='app__contents--section' id='app__left-two'>
 							<h1 className='app__left-two__label'>left two</h1>
 						</section>
-						<section id='app__left-three'>
+						<section className='app__contents--section' id='app__left-three'>
 							<h1 className='app__left-three__label'>left three</h1>
 						</section>
 					</div>
 
 					<div className='app__right' id='app__right-container'>
-						<section id='app__right-one'>
+						<section className='app__contents--section' id='app__right-one'>
 							<h1 className='app__right-one__label'>right one</h1>
 						</section>
-						<section id='app__right-two'>
+						<section className='app__contents--section' id='app__right-two'>
 							<h1 className='app__right-two__label'>right two</h1>
 						</section>
-						<section id='app__right-three'>
+						<section className='app__contents--section' id='app__right-three'>
 							<h1 className='app__right-three__label'>right three</h1>
 						</section>
 					</div>
